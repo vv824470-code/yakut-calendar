@@ -1,145 +1,91 @@
-#!/usr/bin/env sh
+@rem
+@rem Copyright 2015 the original author or authors.
+@rem
+@rem Licensed under the Apache License, Version 2.0 (the "License");
+@rem you may not use this file except in compliance with the License.
+@rem You may obtain a copy of the License at
+@rem
+@rem      https://www.apache.org/licenses/LICENSE-2.0
+@rem
+@rem Unless required by applicable law or agreed to in writing, software
+@rem distributed under the License is distributed on an "AS IS" BASIS,
+@rem WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+@rem See the License for the specific language governing permissions and
+@rem limitations under the License.
+@rem
 
-##############################################################################
-##
-##  Gradle start up script for UN*X
-##
-##############################################################################
+@if "%DEBUG%" == "" @echo off
+@rem ##########################################################################
+@rem
+@rem  Gradle startup script for Windows
+@rem
+@rem ##########################################################################
 
-# Attempt to set APP_HOME
-# Resolve links: $0 may be a link
-PRG="$0"
-# Need this for relative symlinks.
-while [ -h "$PRG" ] ; do
-    ls=`ls -ld "$PRG"`
-    link=`expr "$ls" : '.*-> \(.*\)$'`
-    if expr "$link" : '/.*' > /dev/null; then
-        PRG="$link"
-    else
-        PRG=`dirname "$PRG"`"/$link"
-    fi
-done
-SAVED="`pwd`"
-cd "`dirname \"$PRG\"`/" >/dev/null
-APP_HOME="`pwd -P`"
-cd "$SAVED" >/dev/null
+@rem Set local scope for the variables with windows NT shell
+if "%OS%"=="Windows_NT" setlocal
 
-APP_NAME="Gradle"
-APP_BASE_NAME=`basename "$0"`
+set DIRNAME=%~dp0
+if "%DIRNAME%" == "" set DIRNAME=.
+set APP_BASE_NAME=%~n0
+set APP_HOME=%DIRNAME%
 
-# Add default JVM options here. You can also use JAVA_OPTS and GRADLE_OPTS to pass JVM options to this script.
-DEFAULT_JVM_OPTS='"-Xmx64m" "-Xms64m"'
+@rem Resolve any "." and ".." in APP_HOME to make it shorter.
+for %%i in ("%APP_HOME%") do set APP_HOME=%%~fi
 
-# Use the maximum available, or set MAX_FD != -1 to use that value.
-MAX_FD="maximum"
+@rem Add default JVM options here. You can also use JAVA_OPTS and GRADLE_OPTS to pass JVM options to this script.
+set DEFAULT_JVM_OPTS="-Xmx64m" "-Xms64m"
 
-warn () {
-    echo "$*"
-}
+@rem Find java.exe
+if defined JAVA_HOME goto findJavaFromJavaHome
 
-die () {
-    echo
-    echo "$*"
-    echo
-    exit 1
-}
+set JAVA_EXE=java.exe
+%JAVA_EXE% -version >NUL 2>&1
+if "%ERRORLEVEL%" == "0" goto execute
 
-# OS specific support (must be 'true' or 'false').
-cygwin=false
-msys=false
-darwin=false
-nonstop=false
-case "`uname`" in
-  CYGWIN* )
-    cygwin=true
-    ;;
-  Darwin* )
-    darwin=true
-    ;;
-  MINGW* )
-    msys=true
-    ;;
-  NONSTOP* )
-    nonstop=true
-    ;;
-esac
+echo.
+echo ERROR: JAVA_HOME is not set and no 'java' command could be found in your PATH.
+echo.
+echo Please set the JAVA_HOME variable in your environment to match the
+echo location of your Java installation.
 
-CLASSPATH=$APP_HOME/gradle/wrapper/gradle-wrapper.jar
+goto fail
 
-# Determine the Java command to use to start the JVM.
-if [ -n "$JAVA_HOME" ] ; then
-    if [ -x "$JAVA_HOME/jre/sh/java" ] ; then
-        # IBM's JDK on AIX uses strange locations for the executables
-        JAVACMD="$JAVA_HOME/jre/sh/java"
-    else
-        JAVACMD="$JAVA_HOME/bin/java"
-    fi
-    if [ ! -x "$JAVACMD" ] ; then
-        die "ERROR: JAVA_HOME is set to an invalid directory: $JAVA_HOME
-Please set the JAVA_HOME variable in your environment to match the location of your Java installation."
-    fi
-else
-    JAVACMD="java"
-    which java >/dev/null 2>&1 || die "ERROR: JAVA_HOME is not set and no 'java' command could be found in your PATH.
-Please set the JAVA_HOME variable in your environment to match the location of your Java installation."
-fi
+:findJavaFromJavaHome
+set JAVA_HOME=%JAVA_HOME:"=%
+set JAVA_EXE=%JAVA_HOME%/bin/java.exe
 
-# Increase the maximum file descriptors if we can.
-if [ "$cygwin" = "false" ] && [ "$darwin" = "false" ] && [ "$nonstop" = "false" ] ; then
-    MAX_FD_LIMIT=`ulimit -H -n`
-    if [ $? -eq 0 ] ; then
-        if [ "$MAX_FD" = "maximum" ] || [ "$MAX_FD" = "max" ] ; then
-            MAX_FD="$MAX_FD_LIMIT"
-        fi
-        ulimit -n $MAX_FD
-        if [ $? -ne 0 ] ; then
-            warn "Could not set maximum file descriptor limit: $MAX_FD"
-        fi
-    else
-        warn "Could not query maximum file descriptor limit: $MAX_FD_LIMIT"
-    fi
-fi
+if exist "%JAVA_EXE%" goto execute
 
-# For Darwin, add options to specify how the application appears in the dock
-if $darwin; then
-    GRADLE_OPTS="$GRADLE_OPTS \"-Xdock:name=$APP_NAME\" \"-Xdock:icon=$APP_HOME/media/gradle.icns\""
-fi
+echo.
+echo ERROR: JAVA_HOME is set to an invalid directory: %JAVA_HOME%
+echo.
+echo Please set the JAVA_HOME variable in your environment to match the
+echo location of your Java installation.
 
-# For Cygwin or MSYS, switch paths to Windows format before running java
-if [ "$cygwin" = "true" ] || [ "$msys" = "true" ] ; then
-    APP_HOME=`cygpath --path --mixed "$APP_HOME"`
-    CLASSPATH=`cygpath --path --mixed "$CLASSPATH"`
-    JAVACMD=`cygpath --unix "$JAVACMD"`
+goto fail
 
-    # We build the pattern for arguments to be converted via cygpath
-    ROOTDIRSRAW=`find -L / -maxdepth 1 -mindepth 1 -type d 2>/dev/null`
-    SEP=""
-    for dir in $ROOTDIRSRAW ; do
-        ROOTDIRS="$ROOTDIRS$SEP$dir"
-        SEP="|"
-    done
-    OURCYGPATTERN="(^($ROOTDIRS))"
-    # Add a user-defined pattern to the cygpath arguments
-    if [ "$GRADLE_CYGPATTERN" != "" ] ; then
-        OURCYGPATTERN="$OURCYGPATTERN|($GRADLE_CYGPATTERN)"
-    fi
-    # Now convert the arguments
-    for i do
-        EQUALS=`echo $i | cut -d "=" -f1-`
-        if echo $EQUALS | grep -E -- "$OURCYGPATTERN" > /dev/null ; then
-            i=`echo $i | sed -e "s|$OURCYGPATTERN|(|g"`
-            ARG=`echo $i | cut -d "=" -f2-`
-            if [ "$ARG" = "" ] ; then
-                ARG=$i
-            fi
-            N=`echo $ARG | sed -e "s|/|-|g"`
-            i="$N"
-        fi
-        echo $i
-    done
-}
+:execute
+@rem Setup the command line
 
-# Split the arguments
-eval set -- $DEFAULT_JVM_OPTS $JAVA_OPTS $GRADLE_OPTS '"$@"'
+set CLASSPATH=%APP_HOME%\gradle\wrapper\gradle-wrapper.jar
 
-exec "$JAVACMD" "$@"
+
+@rem Execute Gradle
+"%JAVA_EXE%" %DEFAULT_JVM_OPTS% %JAVA_OPTS% %GRADLE_OPTS% -classpath "%CLASSPATH%" org.gradle.wrapper.GradleWrapperMain %*
+
+:end
+@rem End local scope for the variables with windows NT shell
+if "%ERRORLEVEL%"=="0" goto mainEnd
+
+:fail
+rem Set variable GRADLE_EXIT_CONSOLE if you need the _script_ return code instead of
+rem the _cmd_ return code when terminating the cmd process
+set EXIT_CODE=%ERRORLEVEL%
+if %EXIT_CODE% equ 0 set EXIT_CODE=1
+if not ""=="%GRADLE_EXIT_CONSOLE%" exit %EXIT_CODE%
+exit /b %EXIT_CODE%
+
+:mainEnd
+if "%OS%"=="Windows_NT" endlocal
+
+:omega
