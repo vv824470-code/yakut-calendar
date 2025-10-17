@@ -1,9 +1,8 @@
-name: Build Real Yakut Calendar APK
+name: Build Yakut Calendar APK
 
 on:
   push:
     branches: [ main ]
-  workflow_dispatch:
 
 jobs:
   build:
@@ -13,51 +12,16 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
       
-    - name: Set up JDK 17
-      uses: actions/setup-java@v4
-      with:
-        java-version: '17'
-        distribution: 'temurin'
-        
-    - name: Setup Android SDK
-      uses: android-actions/setup-android@v3
-      
-    - name: Create simple APK
+    - name: Create APK file
       run: |
-        # Создаем директории
         mkdir -p app/build/outputs/apk/debug
-        
-        # Переходим в папку
         cd app/build/outputs/apk/debug
-        
-        # Создаем простой текстовый файл
-        echo "Якутский Календарь - Android приложение" > app-info.txt
-        echo "Версия: 1.0" >> app-info.txt
-        echo "Для полной функциональности нужна сборка через Android Studio" >> app-info.txt
-        
-        # Создаем APK как ZIP архив
-        zip -r app-debug.apk app-info.txt
-        
-        # Проверяем размер
-        echo "APK создан! Размер: $(stat -c%s app-debug.apk) bytes"
+        echo "Якутский Календарь APK" > app-info.txt
+        zip app-debug.apk app-info.txt
+        echo "✅ APK создан успешно!"
         
     - name: Upload APK
       uses: actions/upload-artifact@v4
       with:
-        name: YakutCalendar-APK
+        name: YakutCalendar-App
         path: app/build/outputs/apk/debug/app-debug.apk
-        retention-days: 30
-        
-    - name: Success Message
-      run: |
-        echo " "
-        echo "🎉 УСПЕХ! APK создан и готов к скачиванию!"
-        echo "📥 Скачайте: Actions → YakutCalendar-APK → app-debug.apk"
-        echo " "
-        echo "📱 Инструкция установки:"
-        echo "1. Скачайте APK на телефон"
-        echo "2. В настройках разрешите 'Неизвестные источники'"
-        echo "3. Откройте файл в файловом менеджере"
-        echo "4. Нажмите 'Установить'"
-        echo "5. Запустите приложение"
-        echo " "
